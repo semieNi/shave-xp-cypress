@@ -46,15 +46,40 @@ describe("login", () => {
       loginPage.noticeShouldBe(message);
     });
 
-    it.only("campos obrigatórios", () => {
+    it("campos obrigatórios", () => {
       loginPage.submit();
+      loginPage.requiredFields("E-mail é obrigatório", "Senha é obrigatória");
+    });
 
-      cy.get(".alert-error")
-        .should("have.length", 2)
-        .and(($small) => {
-          expect($small.get(0).textContent).to.eq("E-mail é obrigatório");
-          expect($small.get(1).textContent).to.eq("Senha é obrigatória");
+    context("senha muito curta", () => {
+      const password = ["1", "12", "123", "1234", "12345"];
+
+      password.forEach((p) => {
+        it("não deve logar com a senha " + p, () => {
+          loginPage.submit("smnesports@gmail.com", p);
+          loginPage.alertShouldBe("Pelo menos 6 caracteres");
         });
+      });
+    });
+
+    context("email no formato incorreto", () => {
+      const emails = [
+        "smnesports&gmail.com",
+        "smnesports.com.br",
+        "@gmail.com",
+        "@",
+        "smnesports@",
+        "123123123",
+        "!@#$%!@#$%",
+        "smnesports@gmail",
+      ];
+
+      emails.forEach((e) => {
+        it("não deve logar com e-mail " + e, () => {
+          loginPage.submit(e, "pwd123");
+          loginPage.alertShouldBe("Informe um email válido");
+        });
+      });
     });
   });
 });
