@@ -1,4 +1,6 @@
 /// <reference types="cypress" />
+import loginPage from "../support/pages/login";
+import shaversPage from "../support/pages/shavers";
 
 describe("login", () => {
   context("quando submeto o formulário", () => {
@@ -9,16 +11,9 @@ describe("login", () => {
         password: "pwd123",
       };
 
-      cy.visit("http://localhost:3000");
+      loginPage.submit(user.email, user.password);
 
-      cy.get("input[placeholder$=email]").type(user.email);
-      cy.get("input[placeholder*=senha]").type(user.password);
-
-      cy.contains("button", "Entrar").click();
-
-      cy.get(".logged-user div a")
-        .should("be.visible")
-        .should("have.text", "Olá, " + user.name);
+      shaversPage.header.userShouldBeLoggedIn(user.name);
     });
 
     it("não deve logar com senha incorreta", () => {
@@ -27,20 +22,13 @@ describe("login", () => {
         email: "smnesports@gmail.com",
         password: "asd123",
       };
-      cy.visit("http://localhost:3000");
 
-      cy.get("input[placeholder$=email]").type(user.email);
-      cy.get("input[placeholder*=senha]").type(user.password);
-
-      cy.contains("button", "Entrar").click();
+      loginPage.submit(user.email, user.password);
 
       const message =
         "Ocorreu um erro ao fazer login, verifique suas credenciais.";
 
-      cy.get(".notice-container")
-        .should("be.visible")
-        .find(".error p")
-        .should("have.text", message);
+      loginPage.noticeShouldBe(message);
     });
 
     it("não deve logar com email não cadastrado", () => {
@@ -49,20 +37,24 @@ describe("login", () => {
         email: "smnesports@404.com",
         password: "pwd123",
       };
-      cy.visit("http://localhost:3000");
 
-      cy.get("input[placeholder$=email]").type(user.email);
-      cy.get("input[placeholder*=senha]").type(user.password);
-
-      cy.contains("button", "Entrar").click();
+      loginPage.submit(user.email, user.password);
 
       const message =
         "Ocorreu um erro ao fazer login, verifique suas credenciais.";
 
-      cy.get(".notice-container")
-        .should("be.visible")
-        .find(".error p")
-        .should("have.text", message);
+      loginPage.noticeShouldBe(message);
+    });
+
+    it.only("campos obrigatórios", () => {
+      loginPage.submit();
+
+      cy.get(".alert-error")
+        .should("have.length", 2)
+        .and(($small) => {
+          expect($small.get(0).textContent).to.eq("E-mail é obrigatório");
+          expect($small.get(1).textContent).to.eq("Senha é obrigatória");
+        });
     });
   });
 });
