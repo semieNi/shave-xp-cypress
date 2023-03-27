@@ -1,15 +1,12 @@
 /// <reference types="cypress" />
 import loginPage from "../support/pages/login";
 import shaversPage from "../support/pages/shavers";
+import data from "../fixtures/users-login.json";
 
 describe("login", () => {
   context("quando submeto o formulário", () => {
     it("deve logar com sucesso", () => {
-      const user = {
-        name: "Lion",
-        email: "smnesports@gmail.com",
-        password: "pwd123",
-      };
+      const user = data;
 
       loginPage.submit(user.email, user.password);
 
