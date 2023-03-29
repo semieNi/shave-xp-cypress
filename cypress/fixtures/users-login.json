@@ -1,5 +1,26 @@
 {
-  "name": "Lion",
-  "email": "smnesports@gmail.com",
-  "password": "pwd123"
+  "success": {
+    "name": "Lion",
+    "email": "smnesports@gmail.com",
+    "password": "pwd123"
+  },
+  "invpass": {
+    "email": "smnesports@gmail.com",
+    "password": "asd123"
+  },
+  "emailnotregistred": {
+    "email": "smnesports@404.com",
+    "password": "asd123"
+  },
+  "shortpass": ["1", "12", "123", "1234", "12345"],
+  "invemails": [
+    "smnesports&gmail.com",
+    "smnesports.com.br",
+    "@gmail.com",
+    "@",
+    "smnesports@",
+    "123123123",
+    "!@#$%!@#$%",
+    "smnesports@gmail"
+  ]
 }
