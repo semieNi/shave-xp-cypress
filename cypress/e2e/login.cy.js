@@ -5,8 +5,16 @@ import data from "../fixtures/users-login.json";
 
 describe("login", () => {
   context("quando submeto o formulário", () => {
-    it("deve logar com sucesso", () => {
+    it.only("deve logar com sucesso", () => {
       const user = data.success;
+
+      cy.request({
+        method: "POST",
+        url: "http://localhost:3333/users",
+        body: user,
+      }).then((response) => {
+        expect(response.status).to.eq(201);
+      });
 
       loginPage.submit(user.email, user.password);
 
