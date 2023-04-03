@@ -8,6 +8,10 @@ describe("login", () => {
     it.only("deve logar com sucesso", () => {
       const user = data.success;
 
+      cy.task("removeUser", user.email).then((result) => {
+        cy.log(result);
+      });
+
       cy.request({
         method: "POST",
         url: "http://localhost:3333/users",
